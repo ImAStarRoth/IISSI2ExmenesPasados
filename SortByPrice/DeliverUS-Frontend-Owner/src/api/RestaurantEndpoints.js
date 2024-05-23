@@ -23,8 +23,8 @@ function remove (id) {
   return destroy(`restaurants/${id}`)
 }
 
-function switchOrder (id) {
-  return patch(`restaurants/${id}/products`)
+function toggleProductsSorting (id) {
+  return patch(`restaurants/${id}/toggleProductsSorting`)
 }
 
-export { getAll, getDetail, getRestaurantCategories, create, update, remove, switchOrder }
+export { getAll, getDetail, getRestaurantCategories, create, update, remove, toggleProductsSorting }

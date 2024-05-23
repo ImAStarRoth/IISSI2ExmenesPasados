@@ -41,11 +41,6 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING,
     logo: DataTypes.STRING,
     heroImage: DataTypes.STRING,
-    sortsProductsByPrice: {
-      allowNull:false,
-      defaultValue: false,
-      type: DataTypes.BOOLEAN,
-    },
     status: {
       type: DataTypes.ENUM,
       values: [
@@ -54,6 +49,10 @@ module.exports = (sequelize, DataTypes) => {
         'closed',
         'temporarily closed'
       ]
+    },
+    sortByPrice: {
+      type: DataTypes.BOOLEAN,
+      defaltValue: false
     },
     restaurantCategoryId: {
       allowNull: false,

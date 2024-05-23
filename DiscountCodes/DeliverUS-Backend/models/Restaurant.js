@@ -41,8 +41,6 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING,
     logo: DataTypes.STRING,
     heroImage: DataTypes.STRING,
-    discountCode: DataTypes.STRING,
-    discount: DataTypes.DOUBLE,
     status: {
       type: DataTypes.ENUM,
       values: [
@@ -69,6 +67,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.DATE,
       defaultValue: new Date()
+    },
+    discountCode: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
+    discount: {
+      allowNull: true,
+      type: DataTypes.DOUBLE
     }
   }, {
     sequelize,

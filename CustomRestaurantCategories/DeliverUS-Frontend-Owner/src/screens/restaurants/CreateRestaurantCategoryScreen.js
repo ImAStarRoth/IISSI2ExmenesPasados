@@ -1,55 +1,63 @@
-import React from 'react'
+// SOLUCION
+import React, { useState } from 'react'
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import * as yup from 'yup'
-import { ScrollView, View, Pressable, StyleSheet } from 'react-native'
 import { createCategory } from '../../api/RestaurantEndpoints'
 import InputItem from '../../components/InputItem'
+import TextRegular from '../../components/TextRegular'
 import * as GlobalStyles from '../../styles/GlobalStyles'
 import { showMessage } from 'react-native-flash-message'
-import { Formik, ErrorMessage } from 'formik'
 import TextError from '../../components/TextError'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import TextRegular from '../../components/TextRegular'
+import { Formik } from 'formik'
 
-export default function CreateRestaurantScreen ({ navigation }) {
+export default function CreateRestaurantCategoryScreen ({ navigation }) {
+  const [backendErrors, setBackendErrors] = useState()
+
   const initialRestaurantCategoryValues = { name: null }
   const validationSchema = yup.object().shape({
     name: yup
       .string()
-      .max(50, 'Name too long')
+      .max(50, 'Name too long, max. 50 chars.')
       .required('Name is required')
   })
 
   const createRestaurantCategory = async (values) => {
+    setBackendErrors([])
     try {
-      const createdRestaurantCat = await createCategory(values)
+      console.log(values)
+      const createdRestaurantCategory = await createCategory(values)
       showMessage({
-        message: `Restaurant category ${createdRestaurantCat.name} succesfully created`,
+        message: `Restaurant category ${createdRestaurantCategory.name} succesfully created`,
         type: 'success',
         style: GlobalStyles.flashStyle,
         titleStyle: GlobalStyles.flashTextStyle
       })
-      navigation.navigate('RestaurantsScreen', { dirty: true })
+      navigation.navigate('CreateRestaurantScreen', { dirty: true })
     } catch (error) {
       console.log(error)
+      setBackendErrors(error.errors)
     }
   }
-
   return (
-    <Formik
-      validationSchema={validationSchema}
-      initialValues={initialRestaurantCategoryValues}
-      onSubmit={createRestaurantCategory}>
-      {({ handleSubmit, setFieldValue, values }) => (
-        <ScrollView>
-          <View style={{ alignItems: 'center', width: '60%' }}>
-              <InputItem
-                name='name'
-                label='Name:'
-              />
-              <ErrorMessage name={'restaurantCategory'} render={msg => <TextError>{msg}</TextError> }/>
-          </View>
+        <Formik
+            validationSchema={validationSchema}
+            initialValues={initialRestaurantCategoryValues}
+            onSubmit={createRestaurantCategory}>
+            {({ handleSubmit, setFieldValue, values }) => (
+                <ScrollView>
+                    <View style={{ alignItems: 'center' }}>
+                        <View style={{ width: '60%' }}>
+                            <InputItem
+                                name='name'
+                                label='Name:'
+                            />
 
-          <Pressable
+                            {backendErrors &&
+                                backendErrors.map((error, index) => <TextError key={index}>{error.param}-{error.msg}</TextError>)
+                            }
+
+                            <Pressable
                                 onPress={handleSubmit}
                                 style={({ pressed }) => [
                                   {
@@ -66,12 +74,14 @@ export default function CreateRestaurantScreen ({ navigation }) {
                                     </TextRegular>
                                 </View>
                             </Pressable>
-
-        </ScrollView>
-      )}
-    </Formik>
+                        </View>
+                    </View>
+                </ScrollView>
+            )}
+        </Formik>
   )
 }
+
 const styles = StyleSheet.create({
   button: {
     borderRadius: 8,

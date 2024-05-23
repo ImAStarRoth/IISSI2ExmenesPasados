@@ -19,7 +19,7 @@ export default function CreateRestaurantScreen ({ navigation }) {
   const [restaurantCategories, setRestaurantCategories] = useState([])
   const [backendErrors, setBackendErrors] = useState()
 
-  const initialRestaurantValues = { name: null, description: null, address: null, postalCode: null, url: null, shippingCosts: null, email: null, phone: null, restaurantCategoryId: null }
+  const initialRestaurantValues = { name: null, description: null, address: null, postalCode: null, url: null, shippingCosts: null, email: null, phone: null, restaurantCategoryId: null, discountCode: null, discount: null }
   const validationSchema = yup.object().shape({
     name: yup
       .string()
@@ -54,14 +54,15 @@ export default function CreateRestaurantScreen ({ navigation }) {
       .positive()
       .integer()
       .required('Restaurant category is required'),
-    discount: yup
-      .number()
-      .positive()
-      .min(1)
-      .max(99),
     discountCode: yup
       .string()
-      .max(10, 'Code to long')
+      .nullable()
+      .max(10, 'Discount code too long'),
+    discount: yup
+      .number()
+      .nullable()
+      .min(1)
+      .max(99)
   })
 
   useEffect(() => {
@@ -185,17 +186,14 @@ export default function CreateRestaurantScreen ({ navigation }) {
                 dropDownStyle={{ backgroundColor: '#fafafa' }}
               />
               <ErrorMessage name={'restaurantCategoryId'} render={msg => <TextError>{msg}</TextError> }/>
-
               <InputItem
-              name='discount'
-              label='Discount (between 0.01 and 0.99)'
+                name='discountCode'
+                label='Discount Code:'
               />
-
               <InputItem
-              name='discountCode'
-              label='Discount code'
+                name='discount'
+                label='Discount:'
               />
-
               <Pressable onPress={() =>
                 pickImage(
                   async result => {

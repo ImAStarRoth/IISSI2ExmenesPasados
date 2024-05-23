@@ -47,11 +47,6 @@ module.exports = {
       heroImage: {
         type: Sequelize.STRING
       },
-      sortsProductsByPrice: {
-        allowNull: false,
-        defaultValue : false,
-        type: Sequelize.BOOLEAN
-      },
       status: {
         type: Sequelize.ENUM,
         values: [
@@ -61,6 +56,10 @@ module.exports = {
           'temporarily closed'
         ],
         defaultValue: 'offline'
+      },
+      sortByPrice: {
+        type: Sequelize.BOOLEAN,
+        defaltValue: false
       },
       createdAt: {
         allowNull: false,

@@ -55,6 +55,14 @@ module.exports = (options) => {
       middlewares.checkRestaurantOwnership,
       RestaurantController.destroy)
 
+  app.route('/restaurants/:restaurantId/toggleProductsSorting')
+    .patch(
+      middlewares.isLoggedIn,
+      middlewares.hasRole('owner'),
+      middlewares.checkEntityExists(Restaurant, 'restaurantId'),
+      middlewares.checkRestaurantOwnership,
+      RestaurantController.toggleProductsSorting)
+
   app.route('/restaurants/:restaurantId/orders')
     .get(
       middlewares.isLoggedIn,
@@ -67,13 +75,6 @@ module.exports = (options) => {
     .get(
       middlewares.checkEntityExists(Restaurant, 'restaurantId'),
       ProductController.indexRestaurant)
-    .patch(
-      middlewares.isLoggedIn,
-      middlewares.hasRole('owner'),
-      middlewares.checkEntityExists(Restaurant, 'restaurantId'),
-      middlewares.checkRestaurantOwnership,
-      RestaurantController.switchProductOrder
-    )  
 
   app.route('/restaurants/:restaurantId/analytics')
     .get(

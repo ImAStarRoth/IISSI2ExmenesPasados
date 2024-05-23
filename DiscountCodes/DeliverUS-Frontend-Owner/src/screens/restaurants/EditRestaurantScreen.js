@@ -22,7 +22,7 @@ export default function EditRestaurantScreen ({ navigation, route }) {
   const [backendErrors, setBackendErrors] = useState()
   const [restaurant, setRestaurant] = useState({})
 
-  const [initialRestaurantValues, setInitialRestaurantValues] = useState({ name: null, description: null, address: null, postalCode: null, url: null, shippingCosts: null, email: null, phone: null, restaurantCategoryId: null, logo: null, heroImage: null })
+  const [initialRestaurantValues, setInitialRestaurantValues] = useState({ name: null, description: null, address: null, postalCode: null, url: null, shippingCosts: null, email: null, phone: null, restaurantCategoryId: null, logo: null, heroImage: null, discountCode: null, discount: null })
   const validationSchema = yup.object().shape({
     name: yup
       .string()
@@ -57,14 +57,15 @@ export default function EditRestaurantScreen ({ navigation, route }) {
       .positive()
       .integer()
       .required('Restaurant category is required'),
-    discount: yup
-      .number()
-      .positive()
-      .min(1)
-      .max(99),
     discountCode: yup
       .string()
-      .max(10, 'Code to long')
+      .nullable()
+      .max(10, 'Discount code too long'),
+    discount: yup
+      .number()
+      .nullable()
+      .min(1)
+      .max(99)
   })
 
   useEffect(() => {
@@ -210,17 +211,14 @@ export default function EditRestaurantScreen ({ navigation, route }) {
                 dropDownStyle={{ backgroundColor: '#fafafa' }}
               />
               <ErrorMessage name={'restaurantCategoryId'} render={msg => <TextError>{msg}</TextError> }/>
-
               <InputItem
-              name='discount'
-              label='Discount (between 0.01 and 0.99)'
+                name='discountCode'
+                label='Discount Code:'
               />
-
               <InputItem
-              name='discountCode'
-              label='Discount code'
+                name='discount'
+                label='Discount:'
               />
-
               <Pressable onPress={() =>
                 pickImage(
                   async result => {

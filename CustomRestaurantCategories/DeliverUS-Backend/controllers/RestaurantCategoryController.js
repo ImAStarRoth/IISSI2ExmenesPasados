@@ -11,10 +11,13 @@ exports.indexRestaurantCategory = async function (req, res) {
   }
 }
 
-exports.createRestaurantCategory = async function (req, res) {
-  const newCategory = RestaurantCategory.build(req.body)
+// SOLUCION
+exports.create = async function (req, res) {
+  const newRestaurantCategory = RestaurantCategory.build(req.body)
+
   try {
-    newCategory.save()
+    const restaurantCategory = await newRestaurantCategory.save()
+    res.json(restaurantCategory)
   } catch (err) {
     res.status(500).send(err)
   }

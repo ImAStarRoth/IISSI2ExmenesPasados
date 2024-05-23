@@ -10,13 +10,10 @@ const Sequelize = require('sequelize')
 
 exports.indexRestaurant = async function (req, res) {
   try {
-    const restaurant = await Restaurant.findOne({where:{restaurantId: req.params.id},attributes:['sortsProductsByPrice']})
-    const order = restaurant.sortsProductsByPrice ? 'price':'order'
     const products = await Product.findAll({
       where: {
         restaurantId: req.params.restaurantId
-      },
-      order: [[order,'DESC']]
+      }
     })
     res.json(products)
   } catch (err) {
